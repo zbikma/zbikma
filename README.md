@@ -1,5 +1,5 @@
 # 💫 About Me:
-I am currently working on AI automation using LLM (gpt)<br>I am learning applied deep learning and AI Agents<br>
+I am currently working on AI automation using LLM (gpt)<br>I am experimenting with applied deep learning and AI Agents<br>
 
 
 ## 🌐 Socials:
