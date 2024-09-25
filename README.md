@@ -1,5 +1,5 @@
 # 💫 About Me:
-I am currently working on AI automation using LLM (gpt)<br>I am experimenting with applied deep learning and AI Agents<br>
+I am currently working on AI automation using Large Language Models LLM for short<br>I am experimenting with deep learning, AI Agents and Multi AI Agent Systems<br>I love reading more than anything also coding to implement something that sparks in my head<br>I code with multiple languages but i don't say I know everythig about alll the languages I use<br> I mostly learn and use the languages for what they are useful and designed for<br>
 
 
 ## 🌐 Socials:
@@ -22,10 +22,3 @@ I am currently working on AI automation using LLM (gpt)<br>I am experimenting wi
 [![](https://visitcount.itsvg.in/api?id=zbikma&icon=0&color=0)](https://visitcount.itsvg.in)
 
 <!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
-# Table of Sections
-
-- [ML Tutorial](ml/index.html)
-- [Article Written by Multi AI Agents - CrewAI](ml/article.html)
-
-
-Welcome to my GitHub Pages site! Use the links above to navigate to different sections of the content.
