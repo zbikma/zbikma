@@ -25,7 +25,7 @@ I am currently working on AI automation using LLM (gpt)<br>I am experimenting wi
 # Table of Sections
 
 - [ML Tutorial](ml/index.html)
-- [Article Written by Multi AI Agents - CrewAI](ml/ArticleWrittenByMultiAIAgents.md)
+- [Article Written by Multi AI Agents - CrewAI](ml/article.html)
 
 
 Welcome to my GitHub Pages site! Use the links above to navigate to different sections of the content.

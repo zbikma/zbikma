@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Display Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #markdown-content {
+            background-color: #eaeaea;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Multi-AI Agent System Writing Articles. CrewAI</h1>
+        <p>
+            This page dynamically loads Markdown content from an external `.md` file and renders it below:
+        </p>
+
+        <h2>Markdown Content</h2>
+        <div id="markdown-content">
+            <!-- Markdown content will be rendered here -->
+        </div>
+    </div>
+
+    <script>
+        // Fetch and display Markdown content
+        fetch('content.md')
+            .then(response => response.text())
+            .then(text => {
+                document.getElementById('markdown-content').innerHTML = marked(text);
+            });
+    </script>
+</body>
+
+</html>
