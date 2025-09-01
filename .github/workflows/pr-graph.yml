@@ -1,0 +1,123 @@
+
+
+name: Build PR graph across my repos
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # daily at 03:17 UTC
+  pull_request:
+    types: [opened, closed, reopened, synchronize]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  pr_graph:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Gather PR counts across my repos
+        id: gather
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner; // your username
+            const perPage = 100;
+            let page = 1;
+            let repos = [];
+
+            // List all public repos for the user (skips archived)
+            while (true) {
+              const { data } = await github.rest.repos.listForUser({
+                username: owner,
+                per_page: perPage,
+                page
+              });
+              repos = repos.concat(data.filter(r => !r.archived));
+              if (data.length < perPage) break;
+              page++;
+            }
+
+            // Collect total PR count per repo (all authors, open+closed)
+            const rows = [];
+            for (const r of repos) {
+              try {
+                const total = (await github.rest.search.issuesAndPullRequests({
+                  q: `repo:${owner}/${r.name} is:pr`
+                })).data.total_count;
+
+                if (total > 0) {
+                  rows.push({ name: r.name, total });
+                }
+              } catch (e) {
+                core.warning(`Skip ${r.name}: ${e.message}`);
+              }
+            }
+
+            // Sort by total desc and keep top 12 for readability
+            rows.sort((a,b) => b.total - a.total);
+            const top = rows.slice(0, 12);
+
+            const labels = top.map(r => r.name);
+            const data = top.map(r => r.total);
+
+            core.setOutput('labels', JSON.stringify(labels));
+            core.setOutput('data', JSON.stringify(data));
+
+      - name: Build chart via QuickChart
+        id: chart
+        run: |
+          mkdir -p assets
+
+          cat > chart.json <<'CFG'
+          {
+            "type": "bar",
+            "data": {
+              "labels": ${LABELS},
+              "datasets": [{
+                "label": "PRs (all authors)",
+                "data": ${DATA}
+              }]
+            },
+            "options": {
+              "plugins": {
+                "legend": { "display": false },
+                "title": {
+                  "display": true,
+                  "text": "PRs per repository (all authors)"
+                }
+              },
+              "scales": {
+                "x": { "ticks": { "maxRotation": 45, "minRotation": 0 } },
+                "y": { "beginAtZero": true, "precision": 0 }
+              }
+            }
+          }
+          CFG
+
+          curl -s -X POST -H 'Content-Type: application/json' \
+            -d @chart.json \
+            "https://quickchart.io/chart?width=1100&height=500&format=png" \
+            --output assets/prs_all_repos.png
+
+        env:
+          LABELS: ${{ steps.gather.outputs.labels }}
+          DATA: ${{ steps.gather.outputs.data }}
+
+      - name: Commit chart
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/prs_all_repos.png
+          if git diff --cached --quiet; then
+            echo "No chart changes to commit."
+          else
+            git commit -m "chore(stats): update PR graph"
+            git push
+          fi
