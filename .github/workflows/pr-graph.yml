@@ -1,5 +1,3 @@
-
-
 name: Build PR graph across my repos
 
 on:
@@ -74,38 +72,22 @@ jobs:
         id: chart
         run: |
           mkdir -p assets
-
-          cat > chart.json <<'CFG'
-          {
-            "type": "bar",
-            "data": {
-              "labels": ${LABELS},
-              "datasets": [{
-                "label": "PRs (all authors)",
-                "data": ${DATA}
-              }]
-            },
-            "options": {
-              "plugins": {
-                "legend": { "display": false },
-                "title": {
-                  "display": true,
-                  "text": "PRs per repository (all authors)"
-                }
-              },
-              "scales": {
-                "x": { "ticks": { "maxRotation": 45, "minRotation": 0 } },
-                "y": { "beginAtZero": true, "precision": 0 }
+          jq -n \
+            --argjson labels "$LABELS" \
+            --argjson data "$DATA" \
+            '{
+              type: "bar",
+              data: { labels: $labels, datasets: [{ label: "PRs (all authors)", data: $data }] },
+              options: {
+                plugins: { legend: { display: false }, title: { display: true, text: "PRs per repository (all authors)" } },
+                scales: { x: { ticks: { maxRotation: 45, minRotation: 0 } }, y: { beginAtZero: true, precision: 0 } }
               }
-            }
-          }
-          CFG
+            }' > chart.json
 
           curl -s -X POST -H 'Content-Type: application/json' \
-            -d @chart.json \
+            --data-binary @chart.json \
             "https://quickchart.io/chart?width=1100&height=500&format=png" \
             --output assets/prs_all_repos.png
-
         env:
           LABELS: ${{ steps.gather.outputs.labels }}
           DATA: ${{ steps.gather.outputs.data }}
