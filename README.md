@@ -40,6 +40,13 @@
 ![](https://github-readme-streak-stats.herokuapp.com/?user=zbikma&theme=dark&hide_border=false)  
 ![](https://github-readme-stats.vercel.app/api/top-langs/?username=zbikma&theme=dark&hide_border=false&layout=compact)  
 
+## 📈 Repository-wide PR Stats
+This badge shows the total number of pull requests created in my repositories, regardless of author (including Codex and other contributors). It is powered by a custom GitHub Action + Shields.io badge that updates automatically.
+
+![Total PRs](https://img.shields.io/badge/PRs%20(all%20authors)-0-blue)
+
+*The number will update automatically.*
+
 ---
 
 ## 🏆 GitHub Trophies
