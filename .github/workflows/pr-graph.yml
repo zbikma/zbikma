@@ -76,17 +76,23 @@ jobs:
             --argjson labels "$LABELS" \
             --argjson data "$DATA" \
             '{
-              type: "bar",
-              data: { labels: $labels, datasets: [{ label: "PRs (all authors)", data: $data }] },
-              options: {
-                plugins: { legend: { display: false }, title: { display: true, text: "PRs per repository (all authors)" } },
-                scales: { x: { ticks: { maxRotation: 45, minRotation: 0 } }, y: { beginAtZero: true, precision: 0 } }
-              }
-            }' > chart.json
-
+              chart: {
+                type: "bar",
+                data: { labels: $labels, datasets: [{ label: "PRs (all authors)", data: $data }] },
+                options: {
+                  plugins: { legend: { display: false }, title: { display: true, text: "PRs per repository (all authors)" } },
+                  scales: { x: { ticks: { maxRotation: 45, minRotation: 0 } }, y: { beginAtZero: true, precision: 0 } }
+                }
+              },
+              width: 1100,
+              height: 500,
+              format: "png",
+              backgroundColor: "transparent"
+            }' > payload.json
+          
           curl -s -X POST -H 'Content-Type: application/json' \
-            --data-binary @chart.json \
-            "https://quickchart.io/chart?width=1100&height=500&format=png" \
+            --data-binary @payload.json \
+            "https://quickchart.io/chart" \
             --output assets/prs_all_repos.png
         env:
           LABELS: ${{ steps.gather.outputs.labels }}
